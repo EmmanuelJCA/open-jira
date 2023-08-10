@@ -1,6 +1,20 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<p align="center">
+  <a href="https://nextjs.org">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://assets.vercel.com/image/upload/v1662130559/nextjs/Icon_dark_background.png">
+      <img src="https://assets.vercel.com/image/upload/v1662130559/nextjs/Icon_light_background.png" height="128">
+    </picture>
+    <h1 align="center">Next.js</h1>
+  </a>
+</p>
 
-## Getting Started
+<p align="center">The React Framework for the Web</p>
+
+# Open Jira
+
+## Environment Variables
+1. Clone the .env.template file and rename it to .env.
+2. Change environment variables.
 
 ## Lift the database
 ```bash
@@ -28,4 +42,9 @@ $ yarn dev
 $ pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Fill database with test data
+
+Execute:
+```
+http://localhost:3000/api/seed
+```
