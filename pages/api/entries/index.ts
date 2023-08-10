@@ -14,6 +14,9 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
     
     case 'POST':
       return postEntry(req, res)
+    
+    case 'PUT':
+      return postEntry(req, res)
   
     default:
       return res.status(400).json({ message: 'Method not allowed' })
@@ -49,7 +52,7 @@ const postEntry = async(req: NextApiRequest, res: NextApiResponse<Data>) => {
     await db.disconnect()
     console.log(error)
 
-    return res.status(400).json({ message: 'Error: Please check server logs' })
+    return res.status(500).json({ message: 'Error: Please check server logs' })
   }
 
   
