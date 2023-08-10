@@ -16,11 +16,13 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
   }
 
   switch (req.method) {
+    case 'GET': 
+      return getEntryById(req, res)
     case 'PUT':
       return updateEntry(req, res)
   
     default:
-      return res.status(200).json({ message: 'Example' })
+      return res.status(200).json({ message: 'Method not allowed' })
   }
 
 }
@@ -51,3 +53,17 @@ const updateEntry = async(req: NextApiRequest, res: NextApiResponse) => {
   }
 
 }
+
+const getEntryById = async(req: NextApiRequest, res: NextApiResponse) => {
+  const { id } = req.query
+
+  await db.connect()
+  const entry = await Entry.findById(id)
+  await db.disconnect()
+
+  if(!entry) {
+    return res.status(404).json({ message: `Entry with id "${id}" not found` })
+  }
+
+  res.status(200).json(entry)
+} 
