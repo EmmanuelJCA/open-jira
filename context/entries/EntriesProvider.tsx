@@ -1,9 +1,9 @@
 import { FC, PropsWithChildren, useEffect, useReducer } from 'react'
 import { useRouter } from 'next/router'
 import { EntriesContext, entriesReducer } from './'
+import { useSnackbar } from 'notistack'
 import { Entry } from '@/interfaces'
 import { entriesApi } from '@/api'
-import { useSnackbar } from 'notistack'
 
 export interface EntriesState {
   entries: Entry[]
@@ -29,6 +29,7 @@ export const EntriesProvider:FC<PropsWithChildren> = ({ children }) => {
       const { data } = await entriesApi.put<Entry>(`/entries/${_id}`, { description, status })
       dispatch({ type: '[Entry] Update-Entry', payload: data })
 
+      router.push('/')
       if(showSnackbar) {
         enqueueSnackbar('Entrada actualizada', {
           variant: 'success',
@@ -49,6 +50,15 @@ export const EntriesProvider:FC<PropsWithChildren> = ({ children }) => {
       await entriesApi.delete(`/entries/${entry._id}`)
       dispatch({ type: '[Entry] Delete-Entry', payload: entry })
       router.push('/')
+      enqueueSnackbar('Entrada Eliminada', {
+        variant: 'success',
+        autoHideDuration: 1500,
+        anchorOrigin: {
+          vertical: 'top',
+          horizontal: 'right'
+        }
+      })
+
     } catch (error) {
       console.log(error);
     }
@@ -70,8 +80,8 @@ export const EntriesProvider:FC<PropsWithChildren> = ({ children }) => {
 
       // Methods
       addNewEntry,
+      deleteEntry,
       updateEntry,
-      deleteEntry
     }}>
       { children }
     </EntriesContext.Provider>

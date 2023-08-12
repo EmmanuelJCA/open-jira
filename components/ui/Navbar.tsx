@@ -18,8 +18,8 @@ export const Navbar = () => {
         >
           <MenuOutlinedIcon />
         </IconButton>
-        <NextLink href="/" passHref legacyBehavior>
-          <Link underline='none' color="white">
+        <NextLink href='/' passHref legacyBehavior>
+          <Link underline='none' color='white'>
             <Typography variant='h6'>Open Jira</Typography>
           </Link>
         </NextLink>
