@@ -20,6 +20,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
       return getEntryById(req, res)
     case 'PUT':
       return updateEntry(req, res)
+    case 'DELETE':
+      return deleteEntry(req, res)
   
     default:
       return res.status(200).json({ message: 'Method not allowed' })
@@ -45,11 +47,11 @@ const updateEntry = async(req: NextApiRequest, res: NextApiResponse) => {
   try {
     const updatedEntry = await Entry.findByIdAndUpdate(id, { description, status }, { runValidators: true, new: true })
     await db.disconnect()
-    res.status(200).json(updatedEntry)
+    return res.status(200).json(updatedEntry)
 
   } catch (error: any) {
     await db.disconnect()
-    res.status(400).json({ message: error.errors.status.message })
+    return res.status(400).json({ message: error.errors.status.message })
   }
 
 }
@@ -65,5 +67,22 @@ const getEntryById = async(req: NextApiRequest, res: NextApiResponse) => {
     return res.status(404).json({ message: `Entry with id "${id}" not found` })
   }
 
-  res.status(200).json(entry)
-} 
+  return res.status(200).json(entry)
+}
+
+const deleteEntry = async(req: NextApiRequest, res: NextApiResponse) => {
+  const { id } = req.query
+
+  const entryToDelete = await Entry.findById(id)
+
+  if(entryToDelete === null) {
+    await db.disconnect()
+    return res.status(404).json({ message: `Entry with id "${id}" not found` })
+  }
+
+  await db.connect()
+  await Entry.findByIdAndDelete(id)
+  await db.disconnect()
+
+  return res.status(200).json({ message: `Entry with id "${id}" deleted successfully` })
+}

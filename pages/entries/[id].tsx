@@ -8,6 +8,7 @@ import { Entry, EntryStatus } from '@/interfaces'
 import { isValidObjectId } from 'mongoose'
 import { dbEntries } from '@/database'
 import { EntriesContext } from '@/context'
+import { dateFunctions } from '@/utils'
 
 const validStatus: EntryStatus[] = ['pending', 'in-progress', 'finished']
 
@@ -17,7 +18,7 @@ interface Props {
 
 export const EntryPage:FC<Props> = ({ entry }) => {
 
-  const { updateEntry } = useContext(EntriesContext)
+  const { updateEntry, deleteEntry } = useContext(EntriesContext)
   const [inputValue, setInputValue] = useState(entry.description)
   const [statusValue, setStatusValue] = useState<EntryStatus>(entry.status)
   const [touched, setTouched] = useState(false)
@@ -43,6 +44,10 @@ export const EntryPage:FC<Props> = ({ entry }) => {
     updateEntry(updatedEntry, true)
   }
 
+  const onDelete = () => {
+    deleteEntry(entry)
+  }
+
   return (
     <Layout title={ inputValue.substring(0,20) + '...' }>
       <Grid
@@ -55,7 +60,7 @@ export const EntryPage:FC<Props> = ({ entry }) => {
           <Card>
             <CardHeader 
               title={'Entrada:'}
-              subheader={`Creada hace ... minutos`}
+              subheader={ dateFunctions.getFormatDistanceToNow(entry.createdAt) }
             />
             <CardContent>
               <TextField 
@@ -108,12 +113,15 @@ export const EntryPage:FC<Props> = ({ entry }) => {
 
       </Grid>
 
-      <IconButton sx = {{
-        position:'fixed',
-        bottom: 30,
-        right: 30,
-        backgroundColor: 'error.dark'
-      }}>
+      <IconButton 
+        sx = {{
+          position:'fixed',
+          bottom: 30,
+          right: 30,
+          backgroundColor: 'error.dark'
+        }}
+        onClick={ onDelete }
+      >
         <DeleteOutlinedIcon />  
       </IconButton>
     </Layout>
